@@ -20,8 +20,8 @@ var PORT = process.env.PORT || 8080;
 
 // turne off the app.use untill i have better understanding
 
-// app.use(express.urlencoded({ extended: true }));
-// app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 // ================================================================================
 // ROUTER

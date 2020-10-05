@@ -21,7 +21,12 @@ var PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.static('public'));
+
+
+// Lets give this a try to get the css in turned on 
+
+app.use(express.static(__dirname + "/public"));
+
 
 //routes to pages 
 
@@ -30,7 +35,7 @@ app.get("/notes", function (req, res){
 })
 
 app.get("/", function (req, res){
-  res.sendFile(path.join(__dirname, "/Develop/public"));
+  res.sendFile(path.join(__dirname, "/Develop/public/css"));
 })
 
 app.get("*", function (req, res){

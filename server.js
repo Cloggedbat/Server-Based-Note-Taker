@@ -25,23 +25,29 @@ app.use(express.json());
 
 // Lets give this a try to get the css in turned on 
 
-app.use(express.static(__dirname + "/public"));
+// static filess
+// app.use(express.static("/public"));
+app.use(express.static (__dirname + '/public'))
+
 
 
 //routes to pages 
 
 app.get("/notes", function (req, res){
-  res.sendFile(path.join(__dirname, "/Develop/public/notes.html"));
+  res.sendFile(path.join(__dirname, "/public/notes.html"));
 })
 
-app.get("/", function (req, res){
-  res.sendFile(path.join(__dirname, "/Develop/public/css"));
-})
+// app.use("/", function (req, res){
+//   res.sendFile(path.join(__dirname, "/public/css"));
+// })
 
 app.get("*", function (req, res){
-  res.sendFile(path.join(__dirname, "/Develop/public/index.html"));
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 })
 
+app.post("/api/notes", function(req, res) {
+console.log(req.body)
+})
 
 // these have been turned off for now 10/2
 

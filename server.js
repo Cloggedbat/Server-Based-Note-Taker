@@ -62,6 +62,15 @@ app.post("/api/notes", function (req, res) {
 
 })
 
+function load(){
+  var myData = JSON.parse(data);
+  var div = document.getElementById('data');
+  for (var i = 0;i < mydata.length; i++)
+  {
+    div.innerHTML = div.innerHTML + "<p class='inner' id="+i+">"+ mydata[i].name +"</p>" + "<br>";
+}
+}
+
 // these have been turned off for now 10/2
 
 // require("./routes/apiRoutes")(app);

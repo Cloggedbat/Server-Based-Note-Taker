@@ -1,11 +1,13 @@
-const { Router } = require("express");
+const Router = require("express");
 // ==============================================================================
 // DEPENDENCIES
 // Series of npm packages that we will use to give our server useful functionality
 // ==============================================================================
 
 var express = require("express");
-var path = require("path")
+const fs = require("fs");
+var path = require("path");
+const { stringify } = require("querystring");
 // ==============================================================================
 // EXPRESS CONFIGURATION
 // This sets up the basic properties for our express server
@@ -27,13 +29,13 @@ app.use(express.json());
 
 // static filess
 // app.use(express.static("/public"));
-app.use(express.static (__dirname + '/public'))
+app.use(express.static(__dirname + '/public'))
 
 
 
 //routes to pages 
 
-app.get("/notes", function (req, res){
+app.get("/notes", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/notes.html"));
 })
 
@@ -41,12 +43,23 @@ app.get("/notes", function (req, res){
 //   res.sendFile(path.join(__dirname, "/public/css"));
 // })
 
-app.get("*", function (req, res){
+app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 })
 
-app.post("/api/notes", function(req, res) {
-console.log(req.body)
+let data = [];
+app.post("/api/notes", function (req, res) {
+  // var newNote = req.body;
+  res.json(req.body)
+ data.push(req.body)
+  let myJSON = JSON.stringify(req.body)
+  console.log(myJSON)
+  fs.writeFile("Develop/db/db.json", myJSON, function (err) {
+    if (err) {
+      return (err);
+    }
+  })
+
 })
 
 // these have been turned off for now 10/2
@@ -58,6 +71,6 @@ console.log(req.body)
 // "starts" our server
 
 
-app.listen(PORT, function() {
+app.listen(PORT, function () {
   console.log("App listening on PORT: " + PORT);
 });

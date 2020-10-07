@@ -8,10 +8,9 @@ var express = require("express");
 const fs = require("fs");
 var path = require("path");
 const { stringify } = require("querystring");
-// ==============================================================================
+
 // EXPRESS CONFIGURATION
-// This sets up the basic properties for our express server
-// ==============================================================================
+
 
 // Tells node that we are creating an "express" server
 var app = express();
@@ -28,16 +27,19 @@ app.use(express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const DB = path.join(__dirname, 'db', 'db.json')
 
 app.get('/api/notes', function (req, res) {
-  const dbGet = require('./db/db.json');
+  // const dbGet = require(DB);
+  const dbGet = JSON.parse(fs.readFileSync (DB).toString());
+
   res.json(dbGet);
 });
 
 // creating a path to db.json to save notes
 // let data = [];
 app.post("/api/notes", function (req, res) {
-  var newJSON = require("./db/db.json");
+  var newJSON = JSON.parse(fs.readFileSync (DB).toString());
   var newNote = req.body
   newNote.id = Date.now()
   newJSON.push(newNote)
@@ -45,7 +47,7 @@ app.post("/api/notes", function (req, res) {
   // data.push(req.body)
   let myJSON = JSON.stringify(newNote)
   console.log(myJSON)
-  fs.writeFile("./db/db.json", JSON.stringify(newJSON), function (err) {
+  fs.writeFile(DB, JSON.stringify(newJSON), function (err) {
     // console.log(err)
     if (err) {
       throw err;
@@ -56,12 +58,17 @@ app.post("/api/notes", function (req, res) {
 });
 
 app.delete("/api/notes/:id", function (req, res) {
-  let dbdelete = require("./db/db.json");
+  let dbdelete = JSON.parse(fs.readFileSync (DB).toString());
+  
+  console.log("this is db delete", dbdelete)
   dbdelete = dbdelete.filter(function (note) {
+    
     return note.id != req.params.id;
 
   });
-  fs.writeFile("db/db.json", JSON.stringify(dbdelete), function (err) {
+  console.log("this is db delete after filter", dbdelete)
+
+  fs.writeFile(DB, JSON.stringify(dbdelete), function (err) {
     if (err) {
       throw err;
     };

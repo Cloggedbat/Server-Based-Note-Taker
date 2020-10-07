@@ -19,67 +19,73 @@ var app = express();
 // Sets an initial port. We"ll use this later in our listener
 var PORT = process.env.PORT || 8080;
 
-// Sets up the Express app to handle data parsing
 
+// static filess
+// Sets up the Express app to handle data parsing
+// Lets give this a try to get the css in turned on 
+
+app.use(express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-// Lets give this a try to get the css in turned on 
+app.get('/api/notes', function (req, res) {
+  const dbGet = require('./db/db.json');
+  res.json(dbGet);
+});
 
-// static filess
-// app.use(express.static("/public"));
-app.use(express.static(__dirname + '/public'))
+// creating a path to db.json to save notes
+// let data = [];
+app.post("/api/notes", function (req, res) {
+  var newJSON = require("./db/db.json");
+  var newNote = req.body
+  newNote.id = Date.now()
+  newJSON.push(newNote)
+  // res.json(newNote)
+  // data.push(req.body)
+  let myJSON = JSON.stringify(newNote)
+  console.log(myJSON)
+  fs.writeFile("./db/db.json", JSON.stringify(newJSON), function (err) {
+    // console.log(err)
+    if (err) {
+      throw err;
+    };
+    res.json(newNote);
+  });
 
+});
 
+app.delete("/api/notes/:id", function (req, res) {
+  let dbdelete = require("./db/db.json");
+  dbdelete = dbdelete.filter(function (note) {
+    return note.id != req.params.id;
+
+  });
+  fs.writeFile("db/db.json", JSON.stringify(dbdelete), function (err) {
+    if (err) {
+      throw err;
+    };
+    res.json();
+  });
+});
 
 //routes to pages 
-
 app.get("/notes", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/notes.html"));
 })
 
-// app.use("/", function (req, res){
-//   res.sendFile(path.join(__dirname, "/public/css"));
-// })
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "/public/index.html"));
 })
 
-let data = [];
-app.post("/api/notes", function (req, res) {
-  // var newNote = req.body;
-  res.json(req.body)
- data.push(req.body)
-  let myJSON = JSON.stringify(req.body)
-  console.log(myJSON)
-  fs.writeFile("Develop/db/db.json", myJSON, function (err) {
-    if (err) {
-      return (err);
-    }
-  })
 
-})
 
-function load(){
-  var myData = JSON.parse(data);
-  var div = document.getElementById('data');
-  for (var i = 0;i < mydata.length; i++)
-  {
-    div.innerHTML = div.innerHTML + "<p class='inner' id="+i+">"+ mydata[i].name +"</p>" + "<br>";
-}
-}
 
-// these have been turned off for now 10/2
-
-// require("./routes/apiRoutes")(app);
 
 
 
 // "starts" our server
-
-
 app.listen(PORT, function () {
   console.log("App listening on PORT: " + PORT);
 });

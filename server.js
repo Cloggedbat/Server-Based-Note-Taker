@@ -72,8 +72,8 @@ app.delete("/api/notes/:id", function (req, res) {
     if (err) {
       throw err;
     };
-    res.json();
   });
+  res.json();
 });
 
 //routes to pages 

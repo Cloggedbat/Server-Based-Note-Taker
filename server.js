@@ -27,8 +27,8 @@ app.use(express.static(__dirname + '/public'))
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const DB = path.join(__dirname, 'db', 'db.json')
-
+const DB =  "./db/db.json"
+// path.join
 app.get('/api/notes', function (req, res) {
   // const dbGet = require(DB);
   const dbGet = JSON.parse(fs.readFileSync (DB).toString());
@@ -45,15 +45,15 @@ app.post("/api/notes", function (req, res) {
   newJSON.push(newNote)
   // res.json(newNote)
   // data.push(req.body)
-  let myJSON = JSON.stringify(newNote)
-  console.log(myJSON)
+  // let myJSON = JSON.stringify(newNote)
+  console.log("look at me", DB)
   fs.writeFile(DB, JSON.stringify(newJSON), function (err) {
     // console.log(err)
     if (err) {
       throw err;
     };
-    res.json(newNote);
   });
+  res.json(newNote);
 
 });
 
@@ -73,7 +73,7 @@ app.delete("/api/notes/:id", function (req, res) {
       throw err;
     };
   });
-  res.json();
+  res.json(dbdelete);
 });
 
 //routes to pages 
